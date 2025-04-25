@@ -1,35 +1,45 @@
 import React from 'react';
-import { ResumeProvider } from './context/ResumeContext';
+import { NavigationProvider, useNavigation } from './hooks/useNavigation';
 import Header from './components/Header';
-import Footer from './components/Footer';
-import ResumeEditor from './components/ResumeEditor';
-import ResumePreview from './components/ResumePreview';
+import Hero from './components/Hero';
+import ResumeBuilder from './components/ResumeBuilder/ResumeBuilder';
+import ResumeAnalyzer from './components/ResumeAnalyzer/ResumeAnalyzer';
+import PortfolioGenerator from './components/PortfolioGenerator/PortfolioGenerator';
+import HRModule from './components/HRModule/HRModule';
+import EndToEnd from './components/EndToEnd/EndToEnd';
+import PDFTest from './components/PDFTest';
+
+const AppContent: React.FC = () => {
+  const { currentPath } = useNavigation();
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+      <Header />
+      <main className="pt-20 pb-12">
+        {currentPath === '/' && <Hero />}
+        {currentPath === '/resume-builder' && <ResumeBuilder />}
+        {currentPath === '/resume-analyzer' && <ResumeAnalyzer />}
+        {currentPath === '/portfolio-generator' && <PortfolioGenerator />}
+        {currentPath === '/hr-module' && <HRModule />}
+        {currentPath === '/end-to-end' && <EndToEnd />}
+        {currentPath === '/pdf-test' && <PDFTest />}
+      </main>
+      <footer className="bg-white border-t border-gray-200 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-center text-gray-500 text-sm">
+            &copy; {new Date().getFullYear()} CareerAI. All rights reserved.
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+};
 
 function App() {
   return (
-    <ResumeProvider>
-      <div className="min-h-screen flex flex-col">
-        <Header />
-        
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-8">
-            Build Your Professional Resume
-          </h1>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="lg:order-1">
-              <ResumeEditor />
-            </div>
-            
-            <div className="lg:order-2">
-              <ResumePreview />
-            </div>
-          </div>
-        </main>
-        
-        <Footer />
-      </div>
-    </ResumeProvider>
+    <NavigationProvider>
+      <AppContent />
+    </NavigationProvider>
   );
 }
 

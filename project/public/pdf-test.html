@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PDF Generation Test</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f3f4f6;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #4f46e5;
+      margin-top: 0;
+    }
+    .content {
+      margin-bottom: 20px;
+    }
+    .footer {
+      border-top: 1px solid #e5e7eb;
+      padding-top: 20px;
+      font-size: 14px;
+      color: #6b7280;
+    }
+    button {
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    button:hover {
+      background-color: #4338ca;
+    }
+    #status {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .success {
+      background-color: #d1fae5;
+      color: #065f46;
+    }
+    .error {
+      background-color: #fee2e2;
+      color: #991b1b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>PDF Generation Test</h1>
+    <button id="generatePdf">Generate PDF</button>
+    <div id="status"></div>
+    
+    <div id="content" class="content">
+      <p>This is a test PDF generated from a simple HTML template.</p>
+      <p>If this works, we can apply the same approach to the resume builder.</p>
+      <div class="grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+        <div style="background-color: #f3f4f6; padding: 15px; border-radius: 4px;">
+          <h3>Section 1</h3>
+          <p>Some content for section 1</p>
+        </div>
+        <div style="background-color: #f3f4f6; padding: 15px; border-radius: 4px;">
+          <h3>Section 2</h3>
+          <p>Some content for section 2</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <p>Generated on <span id="timestamp"></span></p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('timestamp').textContent = new Date().toLocaleString();
+    
+    document.getElementById('generatePdf').addEventListener('click', async function() {
+      const statusElement = document.getElementById('status');
+      statusElement.textContent = 'Generating PDF...';
+      statusElement.className = '';
+      
+      try {
+        const content = document.getElementById('content');
+        
+        // Create a clone of the content element
+        const clone = content.cloneNode(true);
+        clone.style.position = 'absolute';
+        clone.style.left = '-9999px';
+        clone.style.top = '-9999px';
+        document.body.appendChild(clone);
+        
+        // Capture the content as an image
+        const canvas = await html2canvas(clone, {
+          scale: 1.5,
+          useCORS: true,
+          logging: true,
+          backgroundColor: '#ffffff',
+          allowTaint: true
+        });
+        
+        // Remove the clone
+        document.body.removeChild(clone);
+        
+        // Create a new PDF document
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        
+        // Get the PDF dimensions
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        
+        // Calculate the dimensions to fit the PDF
+        const imgWidth = pdfWidth;
+        const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+        
+        // Add the image to the PDF
+        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+        pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+        
+        // Save the PDF
+        pdf.save('test.pdf');
+        
+        statusElement.textContent = 'PDF generated successfully!';
+        statusElement.className = 'success';
+      } catch (error) {
+        console.error('PDF generation error:', error);
+        statusElement.textContent = 'Error generating PDF: ' + error.message;
+        statusElement.className = 'error';
+      }
+    });
+  </script>
+</body>
+</html> 
