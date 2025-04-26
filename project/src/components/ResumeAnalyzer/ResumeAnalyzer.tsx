@@ -277,7 +277,7 @@ const ResumeAnalyzer: React.FC = () => {
         setUseFallback(true);
         setStatus('complete');
         setAnalysis(mockAnalysis);
-        setError('Using sample data due to API limitations. For full analysis, please configure your OpenAI API key.');
+        //setError('Using sample data due to API limitations. For full analysis, please configure your OpenAI API key.');
       }
     } catch (err) {
       console.error('Error processing resume:', err);

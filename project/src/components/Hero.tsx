@@ -70,7 +70,7 @@ const Hero: React.FC = () => {
       
       <div className="mt-20 text-center">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">
-          Why Choose CareerAI?
+          Why Choose Resumelytics?
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
           <div className="bg-white rounded-lg p-6 shadow-md">

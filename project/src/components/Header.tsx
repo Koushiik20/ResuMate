@@ -26,7 +26,8 @@ const Header: React.FC = () => {
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center">
             <BriefcaseBusiness className="w-8 h-8 text-indigo-600" />
-            <span className="ml-2 text-xl font-semibold text-gray-900">CareerAI</span>
+            <span className="ml-2 text-xl font-semibold text-gray-900">Resumelytics
+            </span>
           </div>
           
           {/* Desktop navigation */}
